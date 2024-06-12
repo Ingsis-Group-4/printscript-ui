@@ -57,8 +57,7 @@ export class SnippetService implements SnippetOperations {
     }
 
     listSnippetDescriptors(page: number, pageSize: number, sippetName?: string): Promise<PaginatedSnippets> {
-        return fakeSnippetOperations.listSnippetDescriptors(page, pageSize, sippetName)
-        //TODO: Implement this method
+        return axiosInstance.get(`${MANAGER_URL}/snippets`)
     }
 
     modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
