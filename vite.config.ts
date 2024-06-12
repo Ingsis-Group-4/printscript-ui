@@ -11,7 +11,9 @@ export default defineConfig(({ mode }) => {
       'process.env.AUTH0_DOMAIN': JSON.stringify(env.AUTH0_DOMAIN),
       'process.env.AUTH0_CLIENT_ID': JSON.stringify(env.AUTH0_CLIENT_ID),
       'process.env.AUTH0_AUDIENCE': JSON.stringify(env.AUTH0_AUDIENCE),
-      'process.env.AUTH0_SCOPE': JSON.stringify(env.AUTH0_SCOPE)
+      'process.env.AUTH0_SCOPE': JSON.stringify(env.AUTH0_SCOPE),
+      'process.env.MANAGER_URL': JSON.stringify(env.MANAGER_URL),
+      'process.env.PERMISSIONS_URL': JSON.stringify(env.PERMISSIONS_URL),
     },
     plugins: [react()],
   }
