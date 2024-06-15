@@ -8,7 +8,7 @@ import {TestCaseResult} from "../utils/queries.tsx";
 import {FakeSnippetOperations} from "../utils/mock/fakeSnippetOperations.ts";
 import axiosInstance from "./axiosInstance.ts";
 import {MANAGER_URL} from "../utils/constants.ts";
-import {adaptCreateSnippet, adaptShareSnippet} from "../utils/adapter/managerAdapter.ts";
+import {adaptCreateSnippet, adaptGetRule, adaptShareSnippet} from "../utils/adapter/managerAdapter.ts";
 
 const fakeSnippetOperations = new FakeSnippetOperations()
 
@@ -32,14 +32,14 @@ export class SnippetService implements SnippetOperations {
         //TODO: Implement this method
     }
 
-    getFormatRules(): Promise<Rule[]> {
-        return fakeSnippetOperations.getFormatRules()
-        //TODO: Implement this method
+    async getFormatRules(): Promise<Rule[]> {
+        const response = await axiosInstance.get(`${MANAGER_URL}/rule/all/FORMATTING`)
+        return adaptGetRule(response.data)
     }
 
-    getLintingRules(): Promise<Rule[]> {
-        return fakeSnippetOperations.getLintingRules()
-        //TODO: Implement this method
+    async getLintingRules(): Promise<Rule[]> {
+        const response = await axiosInstance.get(`${MANAGER_URL}/rule/all/LINTING`)
+        return adaptGetRule(response.data)
     }
 
     getSnippetById(id: string): Promise<Snippet | undefined> {
