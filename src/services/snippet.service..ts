@@ -31,9 +31,9 @@ export class SnippetService implements SnippetOperations {
         return axiosInstance.delete(`${MANAGER_URL}/${id}`)
     }
 
-    formatSnippet(snippet: string): Promise<string> {
-        return fakeSnippetOperations.formatSnippet(snippet)
-        //TODO: Implement this method
+    async formatSnippet(snippet: string): Promise<string> {
+        const response = await axiosInstance.post(`${MANAGER_URL}/run/format`, {content: snippet})
+        return response.data
     }
 
     getFileTypes(): Promise<FileType[]> {
