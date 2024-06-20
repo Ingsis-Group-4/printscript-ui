@@ -36,9 +36,8 @@ export class SnippetService implements SnippetOperations {
         return response.data
     }
 
-    getFileTypes(): Promise<FileType[]> {
-        return fakeSnippetOperations.getFileTypes()
-        //TODO: Implement this method
+    async getFileTypes(): Promise<FileType[]> {
+        return [{language: 'printscript', extension: 'prs'}]
     }
 
     async getFormatRules(): Promise<Rule[]> {
@@ -101,9 +100,9 @@ export class SnippetService implements SnippetOperations {
         return adaptTestCaseResult(response.data)
     }
 
-    updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet> {
-        return fakeSnippetOperations.updateSnippetById(id, updateSnippet)
-        //TODO: Implement this method
+    async updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet> {
+        const response = await axiosInstance.put(`${MANAGER_URL}/manager/snippets/${id}`, updateSnippet)
+        return adaptSnippet(response.data)
     }
 
 
