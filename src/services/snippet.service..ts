@@ -87,9 +87,9 @@ export class SnippetService implements SnippetOperations {
         return adaptTestCase(response.data)
     }
 
-    removeTestCase(id: string): Promise<string> {
-        return fakeSnippetOperations.removeTestCase(id)
-        //TODO: Implement this method
+    async removeTestCase(id: string): Promise<string> {
+        await axiosInstance.delete(`${MANAGER_URL}/case/${id}`)
+        return id
     }
 
     shareSnippet(snippetId: string, userId: string): Promise<Snippet> {
