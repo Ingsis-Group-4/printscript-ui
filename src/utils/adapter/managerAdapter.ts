@@ -2,6 +2,7 @@ import {CreateSnippet, PaginatedSnippets, Snippet} from "../snippet.ts";
 import {CreateSnippetInput, ShareSnippetInput} from "./managerTypes.ts";
 import {Rule} from "../../types/Rule.ts";
 import {TestCase} from "../../types/TestCase.ts";
+import {TestCaseResult} from "../queries.tsx";
 
 export const adaptCreateSnippet = (createSnippet: CreateSnippet): CreateSnippetInput => {
     return {
@@ -69,6 +70,7 @@ export const adaptTestCase = (data: any): TestCase => {
 
 export const adaptPostTestCase = (snippetId: string, testCase: Partial<TestCase>): any => {
     return {
+        id: testCase.id,
         snippetId: snippetId,
         testCaseName: testCase.name,
         inputs: testCase.input,
@@ -76,3 +78,7 @@ export const adaptPostTestCase = (snippetId: string, testCase: Partial<TestCase>
     }
 }
 
+export const adaptTestCaseResult = (data: any): TestCaseResult => {
+    const hasPassed = data.hasPassed
+    return hasPassed ? "success" : "fail"
+}

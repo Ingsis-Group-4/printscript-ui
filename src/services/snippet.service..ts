@@ -15,7 +15,7 @@ import {
     adaptShareSnippet,
     adaptSnippet,
     adaptSnippetList,
-    adaptTestCase,
+    adaptTestCase, adaptTestCaseResult,
     adaptTestCases
 } from "../utils/adapter/managerAdapter.ts";
 
@@ -96,9 +96,9 @@ export class SnippetService implements SnippetOperations {
         return axiosInstance.post(`${MANAGER_URL}/share`, adaptShareSnippet(snippetId, userId))
     }
 
-    testSnippet(testCase: Partial<TestCase>): Promise<TestCaseResult> {
-        return fakeSnippetOperations.testSnippet()
-        //TODO: Implement this method
+    async testSnippet(testCase: Partial<TestCase>): Promise<TestCaseResult> {
+        const response = await axiosInstance.post(`${MANAGER_URL}/case/run/${testCase.id}`)
+        return adaptTestCaseResult(response.data)
     }
 
     updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet> {
