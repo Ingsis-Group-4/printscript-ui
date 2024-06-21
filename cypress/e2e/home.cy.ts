@@ -3,10 +3,10 @@ import {CreateSnippet} from "../../src/utils/snippet";
 
 describe('Home', () => {
   beforeEach(() => {
-    // cy.loginToAuth0( TODO DE-Comment when auth0 is ready
-    //     AUTH0_USERNAME,
-    //     AUTH0_PASSWORD
-    // )
+    cy.loginToAuth0(
+        Cypress.env('AUTH0_USERNAME'),
+        Cypress.env('AUTH0_PASSWORD')
+    )
   })
   before(() => {
     process.env.FRONTEND_URL = Cypress.env("FRONTEND_URL");
@@ -41,30 +41,35 @@ describe('Home', () => {
       extension: ".ps"
     }
 
-    cy.intercept('GET', BACKEND_URL+"/snippets*", (req) => {
+    cy.intercept('GET', Cypress.env('MANAGER_URL')+"/manager/snippets*", (req) => {
       req.reply((res) => {
         expect(res.statusCode).to.eq(200);
       });
     }).as('getSnippets');
 
-    cy.request({
-      method: 'POST',
-      url: '/snippets', // Adjust if you have a different base URL configured in Cypress
-      body: snippetData,
-      failOnStatusCode: false // Optional: set to true if you want the test to fail on non-2xx status codes
-    }).then((response) => {
-      expect(response.status).to.eq(200);
+    cy.getCookie('accessToken').should('have.property', 'value').then((accessToken) => {
+      cy.request({
+        method: 'POST',
+        url: `${Cypress.env('MANAGER_URL')}/manager/create`, // Adjust if you have a different base URL configured in Cypress
+        body: snippetData,
+        failOnStatusCode: false, // Optional: set to true if you want the test to fail on non-2xx status codes
+        headers: {
+          'Authorization': 'Bearer ' + accessToken,
+        },
+      }).then((response) => {
+        expect(response.status).to.eq(200);
 
-      expect(response.body.name).to.eq(snippetData.name)
-      expect(response.body.content).to.eq(snippetData.content)
-      expect(response.body.language).to.eq(snippetData.language)
-      expect(response.body).to.haveOwnProperty("id")
+        expect(response.body.name).to.eq(snippetData.name)
+        expect(response.body.content).to.eq(snippetData.content)
+        expect(response.body.language).to.eq(snippetData.language)
+        expect(response.body).to.haveOwnProperty("id")
 
-      cy.get('.MuiBox-root > .MuiInputBase-root > .MuiInputBase-input').clear();
-      cy.get('.MuiBox-root > .MuiInputBase-root > .MuiInputBase-input').type(snippetData.name + "{enter}");
+        cy.get('.MuiBox-root > .MuiInputBase-root > .MuiInputBase-input').clear();
+        cy.get('.MuiBox-root > .MuiInputBase-root > .MuiInputBase-input').type(snippetData.name + "{enter}");
 
-      cy.wait("@getSnippets")
-      cy.contains(snippetData.name).should('exist');
+        cy.wait("@getSnippets")
+        cy.contains(snippetData.name).should('exist');
+      })
     })
   })
 })

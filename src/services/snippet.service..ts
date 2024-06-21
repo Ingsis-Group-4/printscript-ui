@@ -22,13 +22,13 @@ import {
 const fakeSnippetOperations = new FakeSnippetOperations()
 
 export class SnippetService implements SnippetOperations {
-    createSnippet(createSnippet: CreateSnippet): Promise<Snippet> {
-        console.log('primer paso')
-        return axiosInstance.post(`${MANAGER_URL}/create`, adaptCreateSnippet(createSnippet))
+    async createSnippet(createSnippet: CreateSnippet): Promise<Snippet> {
+        const response = await axiosInstance.post(`${MANAGER_URL}/manager/create`, adaptCreateSnippet(createSnippet))
+        return adaptSnippet(response.data)
     }
 
     deleteSnippet(id: string): Promise<string> {
-        return axiosInstance.delete(`${MANAGER_URL}/${id}`)
+        return axiosInstance.delete(`${MANAGER_URL}/manager/${id}`)
     }
 
     async formatSnippet(snippet: string): Promise<string> {
@@ -37,7 +37,7 @@ export class SnippetService implements SnippetOperations {
     }
 
     async getFileTypes(): Promise<FileType[]> {
-        return [{language: 'printscript', extension: 'prs'}]
+        return [{language: 'printscript', extension: 'ps'}]
     }
 
     async getFormatRules(): Promise<Rule[]> {
@@ -92,7 +92,7 @@ export class SnippetService implements SnippetOperations {
     }
 
     shareSnippet(snippetId: string, userId: string): Promise<Snippet> {
-        return axiosInstance.post(`${MANAGER_URL}/share`, adaptShareSnippet(snippetId, userId))
+        return axiosInstance.post(`${MANAGER_URL}/manager/share`, adaptShareSnippet(snippetId, userId))
     }
 
     async testSnippet(testCase: Partial<TestCase>): Promise<TestCaseResult> {

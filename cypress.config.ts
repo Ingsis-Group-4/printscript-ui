@@ -10,6 +10,7 @@ export default defineConfig({
       return config
     },
     experimentalStudio: true,
+    experimentalRunAllSpecs: true,
     baseUrl: FRONTEND_URL,
   },
 });
