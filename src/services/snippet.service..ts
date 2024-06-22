@@ -8,18 +8,18 @@ import {TestCaseResult} from "../utils/queries.tsx";
 import {FakeSnippetOperations} from "../utils/mock/fakeSnippetOperations.ts";
 import axiosInstance from "./axiosInstance.ts";
 import {MANAGER_URL} from "../utils/constants.ts";
-import { ManagerAdapter} from "../utils/adapter/managerAdapter.ts";
+import {ManagerAdapter} from "../utils/adapter/managerAdapter.ts";
 
 const fakeSnippetOperations = new FakeSnippetOperations()
 const managerAdapter = new ManagerAdapter()
 
 export class SnippetService implements SnippetOperations {
     createSnippet(createSnippet: CreateSnippet): Promise<Snippet> {
-        return axiosInstance.post(`${MANAGER_URL}/create`, managerAdapter.adaptCreateSnippet(createSnippet))
+        return axiosInstance.post(`${MANAGER_URL}/manager/create`, managerAdapter.adaptCreateSnippet(createSnippet))
     }
 
     deleteSnippet(id: string): Promise<string> {
-        return axiosInstance.delete(`${MANAGER_URL}/${id}`)
+        return axiosInstance.delete(`${MANAGER_URL}/manager/${id}`)
     }
 
     async formatSnippet(snippet: string): Promise<string> {
@@ -28,7 +28,7 @@ export class SnippetService implements SnippetOperations {
     }
 
     async getFileTypes(): Promise<FileType[]> {
-        return [{language: 'printscript', extension: 'prs'}]
+        return [{language: 'printscript', extension: 'ps'}]
     }
 
     async getFormatRules(): Promise<Rule[]> {
@@ -42,22 +42,22 @@ export class SnippetService implements SnippetOperations {
     }
 
     async getSnippetById(id: string): Promise<Snippet | undefined> {
-        const response = await axiosInstance.get(`${MANAGER_URL}/snippets/${id}`)
+        const response = await axiosInstance.get(`${MANAGER_URL}/manager/snippets/${id}`)
         return managerAdapter.adaptGetSnippetById(response.data)
     }
 
     async getTestCases(snippetId: string): Promise<TestCase[]> {
         const response = await axiosInstance.get(`${MANAGER_URL}/case/${snippetId}`)
-        return adaptTestCases(response.data)
+        return managerAdapter.adaptTestCases(response.data)
     }
 
-    getUserFriends(name?: string, page?: number, pageSize?: number): Promise<PaginatedUsers> {
-        return fakeSnippetOperations.getUserFriends(name, page, pageSize)
-        //TODO: Implement this method
+    async getUserFriends(name?: string, page?: number, pageSize?: number): Promise<PaginatedUsers> {
+        const response = await axiosInstance.get(`${MANAGER_URL}/users`)
+        return managerAdapter.adaptUsers(response.data)
     }
 
     async listSnippetDescriptors(page: number, pageSize: number, sippetName?: string): Promise<PaginatedSnippets> {
-        const response = await axiosInstance.get(`${MANAGER_URL}/snippets`)
+        const response = await axiosInstance.get(`${MANAGER_URL}/manager/snippets`)
         return managerAdapter.adaptListSnippetDescriptors(response.data)
     }
 
@@ -72,7 +72,7 @@ export class SnippetService implements SnippetOperations {
     }
 
     async postTestCase(snippetId: string, testCase: Partial<TestCase>): Promise<TestCase> {
-        const response = await axiosInstance.post(`${MANAGER_URL}/case`, adaptPostTestCase(snippetId, testCase))
+        const response = await axiosInstance.post(`${MANAGER_URL}/case`, managerAdapter.adaptPostTestCase(snippetId, testCase))
         return managerAdapter.adaptTestCase(response.data)
     }
 
@@ -82,7 +82,7 @@ export class SnippetService implements SnippetOperations {
     }
 
     shareSnippet(snippetId: string, userId: string): Promise<Snippet> {
-        return axiosInstance.post(`${MANAGER_URL}/share`, managerAdapter.adaptShareSnippet(snippetId, userId))
+        return axiosInstance.post(`${MANAGER_URL}/manager/share`, managerAdapter.adaptShareSnippet(snippetId, userId))
     }
 
     async testSnippet(testCase: Partial<TestCase>): Promise<TestCaseResult> {
@@ -94,8 +94,6 @@ export class SnippetService implements SnippetOperations {
         const response = await axiosInstance.put(`${MANAGER_URL}/manager/snippets/${id}`, updateSnippet)
         return managerAdapter.adaptSnippet(response.data)
     }
-
-
 }
 
 export default SnippetService;

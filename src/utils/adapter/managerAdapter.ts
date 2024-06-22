@@ -3,6 +3,7 @@ import {CreateSnippetInput, GetSnippetOutput, ShareSnippetInput} from "./manager
 import {Rule} from "../../types/Rule.ts";
 import {TestCase} from "../../types/TestCase.ts";
 import {TestCaseResult} from "../queries.tsx";
+import {PaginatedUsers} from "../users.ts";
 
 export class ManagerAdapter {
     adaptCreateSnippet(createSnippet: CreateSnippet): CreateSnippetInput {
@@ -62,17 +63,6 @@ export class ManagerAdapter {
         })
     }
 
-    adaptSnippetList = (snippets: any): PaginatedSnippets => {
-        return {
-            snippets: snippets.map((snippet: any) => {
-                return this.adaptSnippet(snippet)
-            }),
-            page: 0,
-            count: 1,
-            page_size: 10
-        }
-    }
-
     adaptSnippet = (snippet: any): Snippet => {
         return {
             id: snippet.id,
@@ -113,5 +103,19 @@ export class ManagerAdapter {
     adaptTestCaseResult = (data: any): TestCaseResult => {
         const hasPassed = data.hasPassed
         return hasPassed ? "success" : "fail"
+    }
+
+    adaptUsers = (data: any): PaginatedUsers => {
+        return {
+            users: data.map((user: any) => {
+                return {
+                    id: user.user_id,
+                    name: user.name
+                }
+            }),
+            page: 0,
+            count: data.length,
+            page_size: data.length
+        }
     }
 }
