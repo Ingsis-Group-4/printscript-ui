@@ -16,7 +16,7 @@ import {
     adaptSnippet,
     adaptSnippetList,
     adaptTestCase, adaptTestCaseResult,
-    adaptTestCases
+    adaptTestCases, adaptUsers
 } from "../utils/adapter/managerAdapter.ts";
 
 const fakeSnippetOperations = new FakeSnippetOperations()
@@ -60,9 +60,9 @@ export class SnippetService implements SnippetOperations {
         return adaptTestCases(response.data)
     }
 
-    getUserFriends(name?: string, page?: number, pageSize?: number): Promise<PaginatedUsers> {
-        return fakeSnippetOperations.getUserFriends(name, page, pageSize)
-        //TODO: Implement this method
+    async getUserFriends(name?: string, page?: number, pageSize?: number): Promise<PaginatedUsers> {
+        const response = await axiosInstance.get(`${MANAGER_URL}/users`)
+        return adaptUsers(response.data)
     }
 
     async listSnippetDescriptors(page: number, pageSize: number, sippetName?: string): Promise<PaginatedSnippets> {

@@ -3,6 +3,7 @@ import {CreateSnippetInput, ShareSnippetInput} from "./managerTypes.ts";
 import {Rule} from "../../types/Rule.ts";
 import {TestCase} from "../../types/TestCase.ts";
 import {TestCaseResult} from "../queries.tsx";
+import {PaginatedUsers} from "../users.ts";
 
 export const adaptCreateSnippet = (createSnippet: CreateSnippet): CreateSnippetInput => {
     return {
@@ -81,4 +82,18 @@ export const adaptPostTestCase = (snippetId: string, testCase: Partial<TestCase>
 export const adaptTestCaseResult = (data: any): TestCaseResult => {
     const hasPassed = data.hasPassed
     return hasPassed ? "success" : "fail"
+}
+
+export const adaptUsers = (data: any): PaginatedUsers => {
+    return {
+        users: data.map((user: any) => {
+            return {
+                id: user.user_id,
+                name: user.name
+            }
+        }),
+        page: 0,
+        count: data.length,
+        page_size: data.length
+    }
 }
