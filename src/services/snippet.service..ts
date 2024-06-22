@@ -8,23 +8,14 @@ import {TestCaseResult} from "../utils/queries.tsx";
 import {FakeSnippetOperations} from "../utils/mock/fakeSnippetOperations.ts";
 import axiosInstance from "./axiosInstance.ts";
 import {MANAGER_URL} from "../utils/constants.ts";
-import {
-    adaptCreateSnippet,
-    adaptGetRule,
-    adaptPostTestCase,
-    adaptShareSnippet,
-    adaptSnippet,
-    adaptSnippetList,
-    adaptTestCase, adaptTestCaseResult,
-    adaptTestCases, adaptUsers
-} from "../utils/adapter/managerAdapter.ts";
+import {ManagerAdapter} from "../utils/adapter/managerAdapter.ts";
 
 const fakeSnippetOperations = new FakeSnippetOperations()
+const managerAdapter = new ManagerAdapter()
 
 export class SnippetService implements SnippetOperations {
-    async createSnippet(createSnippet: CreateSnippet): Promise<Snippet> {
-        const response = await axiosInstance.post(`${MANAGER_URL}/manager/create`, adaptCreateSnippet(createSnippet))
-        return adaptSnippet(response.data)
+    createSnippet(createSnippet: CreateSnippet): Promise<Snippet> {
+        return axiosInstance.post(`${MANAGER_URL}/manager/create`, managerAdapter.adaptCreateSnippet(createSnippet))
     }
 
     deleteSnippet(id: string): Promise<string> {
@@ -42,33 +33,32 @@ export class SnippetService implements SnippetOperations {
 
     async getFormatRules(): Promise<Rule[]> {
         const response = await axiosInstance.get(`${MANAGER_URL}/rule/all/FORMATTING`)
-        return adaptGetRule(response.data)
+        return managerAdapter.adaptGetRule(response.data)
     }
 
     async getLintingRules(): Promise<Rule[]> {
         const response = await axiosInstance.get(`${MANAGER_URL}/rule/all/LINTING`)
-        return adaptGetRule(response.data)
+        return managerAdapter.adaptGetRule(response.data)
     }
 
     async getSnippetById(id: string): Promise<Snippet | undefined> {
         const response = await axiosInstance.get(`${MANAGER_URL}/manager/snippets/${id}`)
-        return adaptSnippet(response.data)
+        return managerAdapter.adaptGetSnippetById(response.data)
     }
 
     async getTestCases(snippetId: string): Promise<TestCase[]> {
         const response = await axiosInstance.get(`${MANAGER_URL}/case/${snippetId}`)
-        return adaptTestCases(response.data)
+        return managerAdapter.adaptTestCases(response.data)
     }
 
     async getUserFriends(name?: string, page?: number, pageSize?: number): Promise<PaginatedUsers> {
         const response = await axiosInstance.get(`${MANAGER_URL}/users`)
-        return adaptUsers(response.data)
+        return managerAdapter.adaptUsers(response.data)
     }
 
     async listSnippetDescriptors(page: number, pageSize: number, sippetName?: string): Promise<PaginatedSnippets> {
         const response = await axiosInstance.get(`${MANAGER_URL}/manager/snippets`)
-        const snippets = response.data
-        return adaptSnippetList(snippets)
+        return managerAdapter.adaptListSnippetDescriptors(response.data)
     }
 
     modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
@@ -82,8 +72,8 @@ export class SnippetService implements SnippetOperations {
     }
 
     async postTestCase(snippetId: string, testCase: Partial<TestCase>): Promise<TestCase> {
-        const response = await axiosInstance.post(`${MANAGER_URL}/case`, adaptPostTestCase(snippetId, testCase))
-        return adaptTestCase(response.data)
+        const response = await axiosInstance.post(`${MANAGER_URL}/case`, managerAdapter.adaptPostTestCase(snippetId, testCase))
+        return managerAdapter.adaptTestCase(response.data)
     }
 
     async removeTestCase(id: string): Promise<string> {
@@ -92,20 +82,18 @@ export class SnippetService implements SnippetOperations {
     }
 
     shareSnippet(snippetId: string, userId: string): Promise<Snippet> {
-        return axiosInstance.post(`${MANAGER_URL}/manager/share`, adaptShareSnippet(snippetId, userId))
+        return axiosInstance.post(`${MANAGER_URL}/manager/share`, managerAdapter.adaptShareSnippet(snippetId, userId))
     }
 
     async testSnippet(testCase: Partial<TestCase>): Promise<TestCaseResult> {
         const response = await axiosInstance.post(`${MANAGER_URL}/case/run/${testCase.id}`)
-        return adaptTestCaseResult(response.data)
+        return managerAdapter.adaptTestCaseResult(response.data)
     }
 
     async updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet> {
         const response = await axiosInstance.put(`${MANAGER_URL}/manager/snippets/${id}`, updateSnippet)
-        return adaptSnippet(response.data)
+        return managerAdapter.adaptSnippet(response.data)
     }
-
-
 }
 
 export default SnippetService;
