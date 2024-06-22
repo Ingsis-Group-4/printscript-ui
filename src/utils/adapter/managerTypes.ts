@@ -8,3 +8,12 @@ export interface ShareSnippetInput {
     snippetId: string,
     userId: string,
 }
+
+export interface GetSnippetOutput {
+    id: string,
+    name: string,
+    content: string,
+    language: string,
+    author: string,
+}
+
