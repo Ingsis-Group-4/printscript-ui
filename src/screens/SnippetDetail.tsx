@@ -65,7 +65,7 @@ export const SnippetDetail = (props: SnippetDetailProps) => {
 
   useEffect(() => {
     if (snippet) {
-      setCode(snippet.content);
+      setCode(snippet.content ?? "");
     }
   }, [snippet]);
 
