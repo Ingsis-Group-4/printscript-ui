@@ -1,4 +1,4 @@
-import {CreateSnippet, PaginatedSnippets, Snippet} from "../snippet.ts";
+import {ComplianceEnum, CreateSnippet, PaginatedSnippets, Snippet} from "../snippet.ts";
 import {CreateSnippetInput, GetSnippetOutput, ShareSnippetInput} from "./managerTypes.ts";
 import {Rule} from "../../types/Rule.ts";
 import {TestCase} from "../../types/TestCase.ts";
@@ -21,14 +21,14 @@ export class ManagerAdapter {
         };
     }
 
-    adaptListSnippetDescriptors(snippetsOutput: GetSnippetOutput[]): Promise<PaginatedSnippets> {
+    adaptListSnippetDescriptors(snippetsOutput: GetSnippetOutput[]): PaginatedSnippets {
         const snippets: Snippet[] = snippetsOutput.map(snippet => ({
             id: snippet.id,
             name: snippet.name,
             content: snippet.content,
             language: snippet.language,
-            extension: "",
-            compliance: 'compliant', // Asignar un valor por defecto o de otra fuente
+            extension: "ps",
+            compliance: this.adaptSnippetStatus(snippet.status) ,
             author: snippet.author
         }));
 
@@ -38,6 +38,19 @@ export class ManagerAdapter {
             count: snippets.length,
             snippets: snippets
         };
+    }
+
+    private adaptSnippetStatus(status: string): ComplianceEnum {
+        switch (status) {
+            case "PENDING":
+                return "pending";
+            case "NOT_COMPLIANT":
+                return "not-compliant";
+            case "COMPLIANT":
+                return "compliant";
+            default:
+                return "failed";
+        }
     }
 
     adaptGetSnippetById(snippetOutput: GetSnippetOutput): Snippet {
@@ -117,5 +130,17 @@ export class ManagerAdapter {
             count: data.length,
             page_size: data.length
         }
+    }
+
+    adaptModifyRules(newRules: Rule[]): any {
+        const adaptedModifiedRules = newRules.map(rule => {
+            return {
+                id: rule.id,
+                isActive: rule.isActive,
+                value: rule.value ? rule.value.toString() : ""
+            }
+        })
+        console.log(adaptedModifiedRules)
+        return adaptedModifiedRules
     }
 }
