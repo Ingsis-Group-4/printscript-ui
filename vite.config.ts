@@ -7,14 +7,14 @@ export default defineConfig(({ mode }) => {
   return {
     define: {
       'process.env': {
-        FRONTEND_URL: JSON.stringify(env.FRONTEND_URL),
-        BACKEND_URL: JSON.stringify(env.BACKEND_URL),
-        AUTH0_DOMAIN: JSON.stringify(env.AUTH0_DOMAIN),
-        AUTH0_CLIENT_ID: JSON.stringify(env.AUTH0_CLIENT_ID),
-        AUTH0_AUDIENCE: JSON.stringify(env.AUTH0_AUDIENCE),
-        AUTH0_SCOPE: JSON.stringify(env.AUTH0_SCOPE),
-        MANAGER_URL: JSON.stringify(env.MANAGER_URL),
-        PERMISSIONS_URL: JSON.stringify(env.PERMISSIONS_URL),
+        VITE_FRONTEND_URL: JSON.stringify(env.VITE_FRONTEND_URL),
+        VITE_BACKEND_URL: JSON.stringify(env.VITE_BACKEND_URL),
+        VITE_AUTH0_DOMAIN: JSON.stringify(env.VITE_AUTH0_DOMAIN),
+        VITE_AUTH0_CLIENT_ID: JSON.stringify(env.VITE_AUTH0_CLIENT_ID),
+        VITE_AUTH0_AUDIENCE: JSON.stringify(env.VITE_AUTH0_AUDIENCE),
+        VITE_AUTH0_SCOPE: JSON.stringify(env.VITE_AUTH0_SCOPE),
+        VITE_MANAGER_URL: JSON.stringify(env.VITE_MANAGER_URL),
+        VITE_PERMISSIONS_URL: JSON.stringify(env.VITE_PERMISSIONS_URL),
       }
     },
     plugins: [react()],
