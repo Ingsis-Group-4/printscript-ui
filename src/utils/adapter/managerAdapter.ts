@@ -21,7 +21,7 @@ export class ManagerAdapter {
         };
     }
 
-    adaptListSnippetDescriptors(snippetsOutput: GetSnippetOutput[]): Promise<PaginatedSnippets> {
+    adaptListSnippetDescriptors(snippetsOutput: GetSnippetOutput[], page: number, page_size: number, count: number): PaginatedSnippets {
         const snippets: Snippet[] = snippetsOutput.map(snippet => ({
             id: snippet.id,
             name: snippet.name,
@@ -33,9 +33,9 @@ export class ManagerAdapter {
         }));
 
         return {
-            page: 1,
-            page_size: 1,
-            count: snippets.length,
+            page: page,
+            page_size: page_size,
+            count: count,
             snippets: snippets
         };
     }
