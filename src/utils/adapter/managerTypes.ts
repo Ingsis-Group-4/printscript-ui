@@ -15,5 +15,6 @@ export interface GetSnippetOutput {
     content: string,
     language: string,
     author: string,
+    status: string,
 }
 
