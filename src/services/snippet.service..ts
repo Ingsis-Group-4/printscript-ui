@@ -61,14 +61,14 @@ export class SnippetService implements SnippetOperations {
         return managerAdapter.adaptListSnippetDescriptors(response.data.snippets, page, pageSize, response.data.count)
     }
 
-    modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
-        return fakeSnippetOperations.modifyFormatRule(newRules)
-        //TODO: Implement this method
+    async modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
+        const response = await axiosInstance.put(`${MANAGER_URL}/rule`, managerAdapter.adaptModifyRules(newRules))
+        return managerAdapter.adaptGetRule(response.data)
     }
 
-    modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
-        return fakeSnippetOperations.modifyLintingRule(newRules)
-        //TODO: Implement this method
+    async modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
+        const response = await axiosInstance.put(`${MANAGER_URL}/rule`, managerAdapter.adaptModifyRules(newRules))
+        return managerAdapter.adaptGetRule(response.data)
     }
 
     async postTestCase(snippetId: string, testCase: Partial<TestCase>): Promise<TestCase> {

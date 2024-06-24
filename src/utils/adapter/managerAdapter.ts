@@ -1,4 +1,4 @@
-import {CreateSnippet, PaginatedSnippets, Snippet} from "../snippet.ts";
+import {ComplianceEnum, CreateSnippet, PaginatedSnippets, Snippet} from "../snippet.ts";
 import {CreateSnippetInput, GetSnippetOutput, ShareSnippetInput} from "./managerTypes.ts";
 import {Rule} from "../../types/Rule.ts";
 import {TestCase} from "../../types/TestCase.ts";
@@ -27,8 +27,8 @@ export class ManagerAdapter {
             name: snippet.name,
             content: snippet.content,
             language: snippet.language,
-            extension: "",
-            compliance: 'compliant', // Asignar un valor por defecto o de otra fuente
+            extension: "ps",
+            compliance: this.adaptSnippetStatus(snippet.status) ,
             author: snippet.author
         }));
 
@@ -38,6 +38,19 @@ export class ManagerAdapter {
             count: count,
             snippets: snippets
         };
+    }
+
+    private adaptSnippetStatus(status: string): ComplianceEnum {
+        switch (status) {
+            case "PENDING":
+                return "pending";
+            case "NOT_COMPLIANT":
+                return "not-compliant";
+            case "COMPLIANT":
+                return "compliant";
+            default:
+                return "failed";
+        }
     }
 
     adaptGetSnippetById(snippetOutput: GetSnippetOutput): Snippet {
@@ -87,6 +100,7 @@ export class ManagerAdapter {
             name: data.testCaseName,
             input: data.inputs,
             output: data.expectedOutputs,
+            envVars: this.adaptEnvVar(data.envs)
         }
     }
 
@@ -96,7 +110,8 @@ export class ManagerAdapter {
             snippetId: snippetId,
             testCaseName: testCase.name,
             inputs: testCase.input,
-            expectedOutputs: testCase.output
+            expectedOutputs: testCase.output,
+            envs: this.adaptPostEnvVar(testCase.envVars)
         }
     }
 
@@ -117,5 +132,38 @@ export class ManagerAdapter {
             count: data.length,
             page_size: data.length
         }
+    }
+
+    adaptModifyRules(newRules: Rule[]): any {
+        const adaptedModifiedRules = newRules.map(rule => {
+            return {
+                id: rule.id,
+                isActive: rule.isActive,
+                value: rule.value ? rule.value.toString() : ""
+            }
+        })
+        console.log(adaptedModifiedRules)
+        return adaptedModifiedRules
+    }
+
+    private adaptPostEnvVar(envVars: string | undefined): any {
+        if (envVars) {
+            const keyValuePairStrings = envVars.split(";")
+            return keyValuePairStrings.map((keyValuePairString: string) => {
+                const keyValuePair = keyValuePairString.split("=")
+                return {
+                    key: keyValuePair[0],
+                    value: keyValuePair[1]
+                }
+            })
+        }else {
+            return []
+        }
+    }
+
+    private adaptEnvVar(envs: any) {
+        return envs.map((env: any) => {
+            return `${env.key}=${env.value}`
+        }).join(";")
     }
 }
