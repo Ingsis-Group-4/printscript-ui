@@ -87,6 +87,7 @@ export class ManagerAdapter {
             name: data.testCaseName,
             input: data.inputs,
             output: data.expectedOutputs,
+            envVars: this.adaptEnvVar(data.envs)
         }
     }
 
@@ -96,7 +97,8 @@ export class ManagerAdapter {
             snippetId: snippetId,
             testCaseName: testCase.name,
             inputs: testCase.input,
-            expectedOutputs: testCase.output
+            expectedOutputs: testCase.output,
+            envs: this.adaptPostEnvVar(testCase.envVars)
         }
     }
 
@@ -117,5 +119,38 @@ export class ManagerAdapter {
             count: data.length,
             page_size: data.length
         }
+    }
+
+    adaptModifyRules(newRules: Rule[]): any {
+        const adaptedModifiedRules = newRules.map(rule => {
+            return {
+                id: rule.id,
+                isActive: rule.isActive,
+                value: rule.value ? rule.value.toString() : ""
+            }
+        })
+        console.log(adaptedModifiedRules)
+        return adaptedModifiedRules
+    }
+
+    private adaptPostEnvVar(envVars: string | undefined): any {
+        if (envVars) {
+            const keyValuePairStrings = envVars.split(";")
+            return keyValuePairStrings.map((keyValuePairString: string) => {
+                const keyValuePair = keyValuePairString.split("=")
+                return {
+                    key: keyValuePair[0],
+                    value: keyValuePair[1]
+                }
+            })
+        }else {
+            return []
+        }
+    }
+
+    private adaptEnvVar(envs: any) {
+        return envs.map((env: any) => {
+            return `${env.key}=${env.value}`
+        }).join(";")
     }
 }
