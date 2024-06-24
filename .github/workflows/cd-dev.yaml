@@ -31,6 +31,15 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
+          build-args: |
+            VITE_FRONTEND_URL=${{ secrets.VITE_FRONTEND_URL }}
+            VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }}
+            VITE_AUTH0_DOMAIN=${{ secrets.VITE_AUTH0_DOMAIN }}
+            VITE_AUTH0_CLIENT_ID=${{ secrets.VITE_AUTH0_CLIENT_ID }}
+            VITE_AUTH0_AUDIENCE=${{ secrets.VITE_AUTH0_AUDIENCE }}
+            VITE_AUTH0_SCOPE=${{ secrets.VITE_AUTH0_SCOPE }}
+            VITE_MANAGER_URL=${{ secrets.VITE_MANAGER_URL }}
+            VITE_PERMISSIONS_URL=${{ secrets.VITE_PERMISSIONS_URL }}
           platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/ingsis-group-4/printscript-ui-dev:${{ steps.short-sha.outputs.sha }}
