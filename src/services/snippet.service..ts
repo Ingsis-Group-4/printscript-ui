@@ -57,18 +57,18 @@ export class SnippetService implements SnippetOperations {
     }
 
     async listSnippetDescriptors(page: number, pageSize: number, sippetName?: string): Promise<PaginatedSnippets> {
-        const response = await axiosInstance.get(`${MANAGER_URL}/manager/snippets`)
-        return managerAdapter.adaptListSnippetDescriptors(response.data)
+        const response = await axiosInstance.get(`${MANAGER_URL}/manager/snippets?page_num=${page}&page_size=${pageSize}`)
+        return managerAdapter.adaptListSnippetDescriptors(response.data.snippets, page, pageSize, response.data.count)
     }
 
-    modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
-        return fakeSnippetOperations.modifyFormatRule(newRules)
-        //TODO: Implement this method
+    async modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
+        const response = await axiosInstance.put(`${MANAGER_URL}/rule`, managerAdapter.adaptModifyRules(newRules))
+        return managerAdapter.adaptGetRule(response.data)
     }
 
-    modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
-        return fakeSnippetOperations.modifyLintingRule(newRules)
-        //TODO: Implement this method
+    async modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
+        const response = await axiosInstance.put(`${MANAGER_URL}/rule`, managerAdapter.adaptModifyRules(newRules))
+        return managerAdapter.adaptGetRule(response.data)
     }
 
     async postTestCase(snippetId: string, testCase: Partial<TestCase>): Promise<TestCase> {
