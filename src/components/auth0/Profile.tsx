@@ -1,39 +1,39 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import { useState } from "react";
 import { Box, Avatar, Typography, Popover } from "@mui/material";
-import { AUTH0_AUDIENCE, AUTH0_SCOPE } from "../../utils/constants.ts";
 import LogoutButton from "./LogoutButton.tsx";
+// import { AUTH0_AUDIENCE, AUTH0_SCOPE } from "../../utils/constants.ts";
+// import Cookies from "js-cookie";
 
 const Profile = () => {
     const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    useEffect(() => {
-        const getUserToken = async () => {
-            if (isAuthenticated && user) {
-                try {
-                    const accessToken = await getAccessTokenSilently({
-                        authorizationParams: {
-                            audience: AUTH0_AUDIENCE,
-                            scope: AUTH0_SCOPE,
-                        },
-                    });
-                    Cookies.set("accessToken", accessToken, { expires: 1 }); // La cookie expirará en 1 día
-                    console.log(accessToken);
-                    // console.log(user);
-                } catch (e: unknown) {
-                    if (e instanceof Error) {
-                        console.log(e.message);
-                    } else {
-                        console.log(String(e));
-                    }
-                }
-            }
-        };
-
-        getUserToken();
-    }, [getAccessTokenSilently, isAuthenticated, user]);
+    // useEffect(() => {
+    //     const getUserToken = async () => {
+    //         if (isAuthenticated && user) {
+    //             try {
+    //                 const accessToken = await getAccessTokenSilently({
+    //                     authorizationParams: {
+    //                         audience: AUTH0_AUDIENCE,
+    //                         scope: AUTH0_SCOPE,
+    //                     },
+    //                 });
+    //                 Cookies.set("accessToken", accessToken, { expires: 1 }); // La cookie expirará en 1 día
+    //                 console.log(accessToken);
+    //                 // console.log(user);
+    //             } catch (e: unknown) {
+    //                 if (e instanceof Error) {
+    //                     console.log(e.message);
+    //                 } else {
+    //                     console.log(String(e));
+    //                 }
+    //             }
+    //         }
+    //     };
+    //
+    //     getUserToken();
+    // }, [getAccessTokenSilently, isAuthenticated, user]);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);

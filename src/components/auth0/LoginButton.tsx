@@ -6,6 +6,7 @@ const LoginButton = () => {
 
     return (
         <Button
+            id={"login-button"}
             onClick={() => loginWithRedirect()}
             sx={{
                 my: 2,
@@ -19,7 +20,7 @@ const LoginButton = () => {
                 }
             }}
         >
-            Log In
+            Log in
         </Button>
     );
 };
