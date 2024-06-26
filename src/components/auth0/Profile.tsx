@@ -1,9 +1,9 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import { useState, useEffect } from "react";
 import { Box, Avatar, Typography, Popover } from "@mui/material";
-import { AUTH0_AUDIENCE, AUTH0_SCOPE } from "../../utils/constants.ts";
 import LogoutButton from "./LogoutButton.tsx";
+import { AUTH0_AUDIENCE, AUTH0_SCOPE } from "../../utils/constants.ts";
+import Cookies from "js-cookie";
 
 const Profile = () => {
     const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
