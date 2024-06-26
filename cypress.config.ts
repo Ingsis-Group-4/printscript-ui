@@ -11,6 +11,6 @@ export default defineConfig({
     },
     experimentalStudio: true,
     experimentalRunAllSpecs: true,
-    baseUrl: FRONTEND_URL,
+    baseUrl: "http://localhost:5173",
   },
 });

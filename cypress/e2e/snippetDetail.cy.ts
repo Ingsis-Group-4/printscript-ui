@@ -1,6 +1,3 @@
-import {BACKEND_URL} from "../../src/utils/constants";
-import {FakeSnippetStore} from "../../src/utils/mock/fakeSnippetStore";
-
 describe('Add snippet tests', () => {
   beforeEach(() => {
     cy.loginToAuth0(

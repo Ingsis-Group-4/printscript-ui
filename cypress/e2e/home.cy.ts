@@ -1,7 +1,9 @@
-import {AUTH0_PASSWORD, AUTH0_USERNAME, BACKEND_URL, FRONTEND_URL} from "../../src/utils/constants";
 import {CreateSnippet} from "../../src/utils/snippet";
 
 describe('Home', () => {
+
+  const FRONTEND_URL = process.env.FRONTEND_URL;
+
   beforeEach(() => {
     cy.loginToAuth0(
         Cypress.env('AUTH0_USERNAME'),
@@ -13,7 +15,7 @@ describe('Home', () => {
     process.env.BACKEND_URL = Cypress.env("BACKEND_URL");
   })
   it('Renders home', () => {
-    cy.visit(FRONTEND_URL)
+    cy.visit("/")
     /* ==== Generated with Cypress Studio ==== */
     cy.get('.MuiTypography-h6').should('have.text', 'Printscript');
     cy.get('.MuiBox-root > .MuiInputBase-root > .MuiInputBase-input').should('be.visible');
@@ -24,7 +26,7 @@ describe('Home', () => {
 
   // You need to have at least 1 snippet in your DB for this test to pass
   it('Renders the first snippets', () => {
-    cy.visit(FRONTEND_URL)
+    cy.visit("/")
     const first10Snippets = cy.get('[data-testid="snippet-row"]')
 
     first10Snippets.should('have.length.greaterThan', 0)
@@ -33,7 +35,7 @@ describe('Home', () => {
   })
 
   it('Can creat snippet find snippets by name', () => {
-    cy.visit(FRONTEND_URL)
+    cy.visit("/")
     const snippetData: CreateSnippet = {
       name: "Test name",
       content: "print(1)",
