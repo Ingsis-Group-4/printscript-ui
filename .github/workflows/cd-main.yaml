@@ -42,3 +42,16 @@ jobs:
             VITE_PERMISSIONS_URL=${{ secrets.VITE_PERMISSIONS_URL }}
           tags: |
             ghcr.io/ingsis-group-4/printscript-ui-main:${{ steps.short-sha.outputs.sha }}
+            
+      - name: Update server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.PROD_URL }}
+          username: "snippet-searcher-admin"
+          key: ${{ secrets.SSH_PRIVATE_KEY_PROD }}
+          script: |
+            cd snippet-infra
+            docker compose -f docker-compose.prod.yml stop printscript-ui
+            docker compose -f docker-compose.prod.yml pull printscript-ui
+            docker compose -f docker-compose.prod.yml up printscript-ui -d --build
+            
