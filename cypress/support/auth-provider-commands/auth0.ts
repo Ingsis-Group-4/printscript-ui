@@ -11,7 +11,7 @@ export function loginViaAuth0Ui(username: string, password: string) {
 
     // Login on Auth0.
   cy.origin(
-      `https://${Cypress.env('AUTH0_DOMAIN')}`,
+      `https://${Cypress.env('VITE_AUTH0_DOMAIN')}`,
       { args: { username, password } },
       ({ username, password }) => {
         cy.get('input#username').type(username)
@@ -21,10 +21,9 @@ export function loginViaAuth0Ui(username: string, password: string) {
   )
 
     cy.wait(1000)
-    cy.get('#go-home').should('be.visible').click();
 
     // Ensure Auth0 has redirected us back to the RWA.
-  cy.url().should('equal', `${Cypress.env('HOME_URL')}/`)
+  cy.url().should('equal', `${Cypress.env('VITE_FRONTEND_URL')}/`)
 }
 
 
