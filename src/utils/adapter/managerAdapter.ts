@@ -142,7 +142,6 @@ export class ManagerAdapter {
                 value: rule.value ? rule.value.toString() : ""
             }
         })
-        console.log(adaptedModifiedRules)
         return adaptedModifiedRules
     }
 
