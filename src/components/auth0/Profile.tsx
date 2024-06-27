@@ -20,8 +20,6 @@ const Profile = () => {
                         },
                     });
                     Cookies.set("accessToken", accessToken, { expires: 1 }); // La cookie expirará en 1 día
-                    console.log(accessToken);
-                    // console.log(user);
                 } catch (e: unknown) {
                     if (e instanceof Error) {
                         console.log(e.message);
